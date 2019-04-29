@@ -4,19 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
+import ru.paul.tagimage.entity.Post;
 import ru.paul.tagimage.repository.PostRepository;
 
 public class PostListViewModel extends ViewModel {
-    private final LiveData<String> str;
-    private PostRepository postRepository = new PostRepository();
+    private final LiveData<List<Post>> postList;
 
     public PostListViewModel() {
-        System.out.println("constructorPostListViewModel");
-        str = postRepository.fillStr();
+
+        postList = PostRepository.getInstance().getListPost(1);
     }
 
 
-    public LiveData<String> getStr() {
-        return str;
+    public LiveData<List<Post>> getPostList() {
+        return postList;
     }
 }

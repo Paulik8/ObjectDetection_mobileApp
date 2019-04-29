@@ -42,7 +42,7 @@ public class PostListFragment extends Fragment {
     }
 
     private void observeViewModel(PostListViewModel postListViewModel) {
-        postListViewModel.getStr().observe(this, posts -> {
+        postListViewModel.getPostList().observe(this, posts -> {
             System.out.println("kek");
         });
     }
