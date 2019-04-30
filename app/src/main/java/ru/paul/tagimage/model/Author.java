@@ -1,4 +1,4 @@
-package ru.paul.tagimage.entity;
+package ru.paul.tagimage.model;
 
 import com.google.gson.annotations.SerializedName;
 

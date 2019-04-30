@@ -1,12 +1,11 @@
 package ru.paul.tagimage.viewmodel;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import ru.paul.tagimage.entity.Post;
+import ru.paul.tagimage.model.Post;
 import ru.paul.tagimage.repository.PostRepository;
 
 public class PostListViewModel extends ViewModel {
