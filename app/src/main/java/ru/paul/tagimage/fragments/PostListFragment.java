@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +41,18 @@ public class PostListFragment extends Fragment {
         postList.setAdapter(postAdapter);
         PostListViewModel viewModel = ViewModelProviders.of(this).get(PostListViewModel.class);
         observeViewModel(viewModel);
+
+        initPosts(viewModel,1);
     }
 
     private void observeViewModel(PostListViewModel postListViewModel) {
-        postListViewModel.getPostList().observe(this, posts -> {
-            System.out.println("kek");
+        postListViewModel.getPosts().observe(this, posts -> {
+            Log.i("posts", "observe");
         });
 
+    }
+
+    private void initPosts(PostListViewModel postListViewModel, Integer page) {
+        postListViewModel.getPostList(page);
     }
 }

@@ -1,5 +1,6 @@
 package ru.paul.tagimage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -33,7 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
             Log.i("key", user);
-
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
 
         loginButton.setOnClickListener(view -> {

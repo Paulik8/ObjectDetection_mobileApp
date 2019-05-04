@@ -1,5 +1,8 @@
 package ru.paul.tagimage.repository;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -19,6 +22,7 @@ import ru.paul.tagimage.service.Service;
 public class PostRepository {
 
     private static PostRepository postRepository;
+    private MutableLiveData<List<Post>> data = new MutableLiveData<>();
     private Service service;
 
     public synchronized static PostRepository getInstance() {
@@ -42,22 +46,24 @@ public class PostRepository {
         service = retrofit.create(Service.class);
     }
 
-    public LiveData<List<Post>> getListPost(Integer page) {
+    public LiveData<List<Post>> getData() {
+        return data;
+    }
 
-        MutableLiveData<List<Post>> posts = new MutableLiveData<>();
+    public void getListPost(Integer page) {
 
         service.getPostList(page).enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                posts.setValue(response.body());
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
+                data.setValue(response.body());
+                Log.i("posts", "ok");
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                System.out.println("err");
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
+                Log.e("posts", "err");
             }
         });
 
-        return posts;
     }
 }
