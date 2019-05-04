@@ -8,20 +8,21 @@ import ru.paul.tagimage.repository.UserRepository;
 
 public class UserViewModel extends ViewModel {
 
-    private LiveData<String> user;
+    private LiveData<String> user = new MutableLiveData<>();
 
     public UserViewModel() {
-        MutableLiveData<String> userInit = new MutableLiveData<>();
-        userInit.setValue("bot1");
-        user = userInit;
+//        MutableLiveData<String> userInit = new MutableLiveData<>();
+//        userInit.setValue("bot1");
+//        user = userInit;
         }
 
     public LiveData<String> getUser() {
+        user = UserRepository.getInstance().getData();
         return user;
 
     }
 
-    public void postAuth() {
-        user = UserRepository.getInstance().getUser();
+    public void postAuth(String nick, String password, Integer age) {
+        UserRepository.getInstance().getUser(nick, password, age);
     }
 }

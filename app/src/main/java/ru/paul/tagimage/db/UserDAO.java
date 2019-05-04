@@ -18,6 +18,6 @@ public interface UserDAO {
     void insertUser(UserEntity user);
 
     @Query("SELECT id FROM USERENTITY WHERE username = :username and password = :password")
-    LiveData<Integer> getUser(String username, String password);
+    Integer getUser(String username, String password);
 
 }

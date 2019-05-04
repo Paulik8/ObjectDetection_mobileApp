@@ -1,7 +1,9 @@
 package ru.paul.tagimage;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.login)
     Button loginButton;
+    @BindView(R.id.nick)
+    EditText nickname;
+    @BindView(R.id.password)
+    EditText password;
+    @BindView(R.id.age)
+    EditText age;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,11 +32,13 @@ public class LoginActivity extends AppCompatActivity {
 
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getUser().observe(this, user -> {
+            Log.i("key", user);
 
         });
 
         loginButton.setOnClickListener(view -> {
-            userViewModel.postAuth();
+
+            userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString())));
         });
     }
 
