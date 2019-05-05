@@ -21,6 +21,7 @@ import ru.paul.tagimage.viewmodel.PostListViewModel;
 
 public class PostListFragment extends Fragment {
     public static final String TAG = "PostListFragment";
+    private PostAdapter postAdapter;
 
     @BindView(R.id.post_list)
     RecyclerView postList;
@@ -37,7 +38,7 @@ public class PostListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         postList.setLayoutManager(new LinearLayoutManager(getContext()));
-        PostAdapter postAdapter = new PostAdapter();
+        postAdapter = new PostAdapter();
         postList.setAdapter(postAdapter);
         PostListViewModel viewModel = ViewModelProviders.of(this).get(PostListViewModel.class);
         observeViewModel(viewModel);
@@ -48,6 +49,8 @@ public class PostListFragment extends Fragment {
     private void observeViewModel(PostListViewModel postListViewModel) {
         postListViewModel.getPosts().observe(this, posts -> {
             Log.i("posts", "observe");
+            postAdapter.setPosts(posts);
+            postAdapter.notifyDataSetChanged();
         });
 
     }

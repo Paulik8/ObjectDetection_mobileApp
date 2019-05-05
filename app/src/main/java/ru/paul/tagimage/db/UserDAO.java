@@ -20,4 +20,8 @@ public interface UserDAO {
     @Query("SELECT id FROM USERENTITY WHERE username = :username and password = :password")
     Integer getUser(String username, String password);
 
+    @Query("DELETE FROM USERENTITY")
+    void clearUsers();
+
+
 }

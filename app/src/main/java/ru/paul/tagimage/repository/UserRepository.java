@@ -64,6 +64,7 @@ public class UserRepository {
             public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
 
                 executorService.execute(() -> {
+                    userDAO.clearUsers();
                     UserEntity user = new UserEntity();
                     user.username = nick;
                     user.password = password;
