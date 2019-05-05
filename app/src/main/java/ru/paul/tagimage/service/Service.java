@@ -14,7 +14,7 @@ import ru.paul.tagimage.model.Post;
 
 public interface Service {
 
-    String BASE_URL = "http://192.168.1.36:3000/";
+    String BASE_URL = "http://192.168.1.65:3000/";
 
     @GET("posts")
     Call<List<Post>> getPostList (@Query("page") Integer page);

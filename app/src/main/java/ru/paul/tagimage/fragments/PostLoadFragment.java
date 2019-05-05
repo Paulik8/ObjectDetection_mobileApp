@@ -27,9 +27,9 @@ import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.paul.tagimage.OpenFragmentCallback;
 import ru.paul.tagimage.R;
 
-import static android.app.Activity.RESULT_OK;
 
 public class PostLoadFragment extends Fragment {
 
@@ -37,10 +37,19 @@ public class PostLoadFragment extends Fragment {
 
     private static final int GALLERY_REQUEST = 1;
 
+    @Nullable
+    private final OpenFragmentCallback openFragmentCallback;
+
     @BindView(R.id.load_button)
     Button button;
+    @BindView(R.id.fragment2)
+    Button button2;
     @BindView(R.id.load_image)
     AppCompatImageView imageView;
+
+    public PostLoadFragment(@Nullable OpenFragmentCallback openFragmentCallback) {
+        this.openFragmentCallback = openFragmentCallback;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -54,6 +63,8 @@ public class PostLoadFragment extends Fragment {
 
         });
         logMemory();
+
+        button2.setOnClickListener(openFragmentCallback);
     }
 
     @Nullable
@@ -95,27 +106,49 @@ public class PostLoadFragment extends Fragment {
 
         InputStream ims = getContext().getContentResolver().openInputStream(image);
 //        File file = new File(getPath(image));
-        Bitmap bitmap = decodeSampledBitmapFromResource(ims, px, px);
+        Bitmap bitmap = decodeSampledBitmapFromResource(image, px, px);
 //        Log.d("log", String.format("Required size = %s, bitmap size = %sx%s, byteCount = %s",
 //                px, bitmap.getWidth(), bitmap.getHeight(), bitmap.getByteCount()));
         imageView.setImageBitmap(bitmap);
     }
 
-    private Bitmap decodeSampledBitmapFromResource(InputStream is,
+    private Bitmap decodeSampledBitmapFromResource(Uri uri,
                                                    int reqWidth, int reqHeight) {
 
         // Читаем с inJustDecodeBounds=true для определения размеров
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(is,null,  options);
+        InputStream ims = null;
+        try {
+            ims = getContext().getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        BitmapFactory.decodeStream(ims,null,  options);
+        try {
+            ims.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Вычисляем inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth,
                 reqHeight);
 
+        try {
+            ims = getContext().getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         // Читаем с использованием inSampleSize коэффициента
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeStream(is, null, options);
+        Bitmap image = BitmapFactory.decodeStream(ims, null, options);
+        try {
+            ims.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 
     private int calculateInSampleSize(BitmapFactory.Options options,
@@ -141,15 +174,4 @@ public class PostLoadFragment extends Fragment {
         return inSampleSize;
     }
 
-    public String getPath(Uri uri)
-    {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index =             cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s=cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
 }
