@@ -8,7 +8,7 @@ import android.view.View;
 import ru.paul.tagimage.fragments.PostListFragment;
 import ru.paul.tagimage.fragments.PostLoadFragment;
 
-public class MainActivity extends AppCompatActivity implements OpenFragmentCallback{
+public class MainActivity extends AppCompatActivity implements OpenFragmentCallback, OpenSearchFragment{
 
     FragmentManager fragmentManager;
 

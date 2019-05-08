@@ -1,14 +1,13 @@
 package ru.paul.tagimage.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +19,7 @@ import ru.paul.tagimage.Constants;
 import ru.paul.tagimage.R;
 import ru.paul.tagimage.model.Post;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private List<Post> posts;
 
@@ -31,7 +30,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -60,15 +59,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_nickname)
+        @BindView(R.id.search_item_nickname)
         TextView nickname;
-        @BindView(R.id.item_age)
+        @BindView(R.id.search_item_age)
         TextView age;
-        @BindView(R.id.item_caption)
+        @BindView(R.id.search_item_caption)
         TextView caption;
-        @BindView(R.id.item_data)
+        @BindView(R.id.search_item_data)
         TextView data;
-        @BindView(R.id.item_image)
+        @BindView(R.id.search_item_image)
         AppCompatImageView image;
 
         ViewHolder(View itemView) {
@@ -76,4 +75,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ButterKnife.bind(this, itemView);
         }
     }
+
 }

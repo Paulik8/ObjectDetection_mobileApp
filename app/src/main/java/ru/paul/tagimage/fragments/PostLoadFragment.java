@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,6 +45,8 @@ public class PostLoadFragment extends Fragment {
     Button button;
     @BindView(R.id.fragment2)
     Button button2;
+    @BindView(R.id.fragment3)
+    Button button3;
     @BindView(R.id.load_image)
     AppCompatImageView imageView;
 
@@ -65,6 +68,15 @@ public class PostLoadFragment extends Fragment {
         logMemory();
 
         button2.setOnClickListener(openFragmentCallback);
+        button3.setOnClickListener(view -> {
+
+            SearchFragment searchFragment = new SearchFragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment, searchFragment, SearchFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     @Nullable
