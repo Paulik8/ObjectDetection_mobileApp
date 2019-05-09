@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("key", user);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            this.finish();
         });
 
         loginButton.setOnClickListener(view -> {

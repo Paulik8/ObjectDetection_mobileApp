@@ -39,14 +39,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.nickname.setText(posts.get(position).getAuthor().getNickname());
-        holder.age.setText(String.valueOf(posts.get(position).getAuthor().getAge()));
+        holder.nickname_caption.setText(posts.get(position).getAuthor().getNickname());
+//        holder.age.setText(String.valueOf(posts.get(position).getAuthor().getAge()));
         holder.caption.setText(posts.get(position).getCaption());
         holder.data.setText(posts.get(position).getDate().toString());
 
         Picasso.get()
                 .load(Constants.BASE_URL + Constants.IMAGE_URL + posts.get(position).getImage())
-                .fit()
-                .centerCrop()
+//                .fit()
+//                .centerCrop()
                 .into(holder.image);
     }
 
@@ -62,8 +63,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         @BindView(R.id.item_nickname)
         TextView nickname;
-        @BindView(R.id.item_age)
-        TextView age;
+//        @BindView(R.id.item_age)
+//        TextView age;
+        @BindView(R.id.item_nickname_caption)
+        TextView nickname_caption;
         @BindView(R.id.item_caption)
         TextView caption;
         @BindView(R.id.item_data)

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         PostLoadFragment postLoadFragment = new PostLoadFragment(this);
         fragmentManager.beginTransaction()
                 .add(R.id.fragment, postLoadFragment, PostLoadFragment.TAG)
-                .addToBackStack(null)
+//                .addToBackStack(null)
                 .commit();
 
 //        PostListFragment postListFragment = new PostListFragment();
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
             PostListFragment postListFragment = new PostListFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment, postListFragment, PostListFragment.TAG)
-                    .addToBackStack(null)
+//                    .addToBackStack(null)
                     .commit();
 
     }

@@ -74,7 +74,7 @@ public class PostLoadFragment extends Fragment {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment, searchFragment, SearchFragment.TAG)
-                    .addToBackStack(null)
+//                    .addToBackStack(null)
                     .commit();
         });
     }
