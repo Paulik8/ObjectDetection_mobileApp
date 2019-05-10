@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TagImage</string>
+    <string name="menu_home">Posts</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_add_post">New Post</string>
 </resources>

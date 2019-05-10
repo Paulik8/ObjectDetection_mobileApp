@@ -52,7 +52,7 @@ public class SearchRepository {
 
     public void searchPosts(Integer page) {
 
-        service.searchPosts("1_2", page).enqueue(new Callback<List<Post>>() {
+        service.searchPosts("cats", page).enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                 data.setValue(response.body());
