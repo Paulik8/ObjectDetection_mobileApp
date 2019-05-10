@@ -1,9 +1,13 @@
 package ru.paul.tagimage;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +26,9 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
 
     @BindView(R.id.navigation)
     BottomNavigationViewEx navigation;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    Menu mainMenu;
 
     FragmentManager fragmentManager;
     PostLoadFragment postLoadFragment = new PostLoadFragment(this);
@@ -35,32 +42,42 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Home");
+
+
+        initNavigation();
+        openPostListFragment();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Search");
+        mainMenu = menu;
+        searchItem.setVisible(false);
+        return true;
+    }
+
+    private void initNavigation() {
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         navigation.enableAnimation(false);
         navigation.enableShiftingMode(false);
         navigation.enableItemShiftingMode(false);
         navigation.setIconsMarginTop(34);
+    }
 
+    private void openPostListFragment() {
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.fragment, postListFragment, PostListFragment.TAG)
-//                .addToBackStack(null)
                 .commit();
         active = postListFragment;
-
-//        PostListFragment postListFragment = new PostListFragment();
-//        fragmentManager.beginTransaction()
-//                .add(R.id.fragment, postListFragment, PostListFragment.TAG)
-//                .addToBackStack(null)
-//                .commit();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
@@ -74,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                                     .show(postListFragment)
                                     .commit();
                             active = postListFragment;
+                            toolbar.setTitle("Home");
+                            mainMenu.findItem(R.id.action_search).setVisible(false);
                             return true;
                         case R.id.menu_search:
                             if (searchFragment == null) {
@@ -90,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                                         .commit();
                             }
                             active = searchFragment;
+                            toolbar.setTitle("Search");
+                            mainMenu.findItem(R.id.action_search).setVisible(true);
                             return true;
 //                        case R.id.menu_add_post:
 //                            if (searchFragment == null) {

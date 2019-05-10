@@ -38,14 +38,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.nickname.setText(posts.get(position).getAuthor().getNickname());
-        holder.age.setText(String.valueOf(posts.get(position).getAuthor().getAge()));
+        holder.nickname_caption.setText(posts.get(position).getAuthor().getNickname());
+//        holder.age.setText(String.valueOf(posts.get(position).getAuthor().getAge()));
         holder.caption.setText(posts.get(position).getCaption());
         holder.data.setText(posts.get(position).getDate().toString());
 
         Picasso.get()
                 .load(Constants.BASE_URL + Constants.IMAGE_URL + posts.get(position).getImage())
-                .fit()
-                .centerCrop()
                 .into(holder.image);
     }
 
@@ -61,8 +60,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @BindView(R.id.search_item_nickname)
         TextView nickname;
-        @BindView(R.id.search_item_age)
-        TextView age;
+//        @BindView(R.id.search_item_age)
+//        TextView age;
+        @BindView(R.id.search_item_nickname_caption)
+        TextView nickname_caption;
         @BindView(R.id.search_item_caption)
         TextView caption;
         @BindView(R.id.search_item_data)
