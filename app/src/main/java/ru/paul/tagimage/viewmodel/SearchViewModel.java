@@ -22,8 +22,8 @@ public class SearchViewModel extends ViewModel {
         return postList;
     }
 
-    public void getPostList(Integer page) {
-        SearchRepository.getInstance().searchPosts(page);
+    public void getPostList(String query, Integer page) {
+        SearchRepository.getInstance().searchPosts(query, page);
     }
 
 }

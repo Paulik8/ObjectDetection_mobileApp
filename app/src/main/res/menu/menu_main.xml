@@ -19,6 +19,7 @@
     <item
         android:id="@+id/menu_add_post"
         android:orderInCategory="100"
+        android:icon="@drawable/add_post_outline"
         app:showAsAction="never"
         tools:ignore="MenuTitle" />
 </menu>

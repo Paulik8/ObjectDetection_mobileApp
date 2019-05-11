@@ -3,12 +3,14 @@ package ru.paul.tagimage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,9 +35,10 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
     Toolbar toolbar;
     Menu mainMenu;
     MainViewModel mainViewModel;
+    Context context;
 
     FragmentManager fragmentManager;
-    PostLoadFragment postLoadFragment = new PostLoadFragment(this);
+    PostLoadFragment postLoadFragment;
     PostListFragment postListFragment = new PostListFragment();
     SearchFragment searchFragment;
     Fragment active;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle("Home");
 
-
+        context = this;
         initNavigation();
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -66,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Search");
         mainMenu = menu;
+
         searchItem.setVisible(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 mainViewModel.changeSearch(query);
+                return true;
             }
 
             @Override
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
 
     private void initNavigation() {
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
-
+        navigation.getMenu().findItem(R.id.menu_home).setIcon(ContextCompat.getDrawable(context, R.drawable.home_filled));
         navigation.enableAnimation(false);
         navigation.enableShiftingMode(false);
         navigation.enableItemShiftingMode(false);
@@ -108,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.menu_home:
+
+                            menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.home_filled));
+                            navigation.getMenu().findItem(R.id.menu_search).setIcon(ContextCompat.getDrawable(context, R.drawable.search_outline));
+                            navigation.getMenu().findItem(R.id.menu_add_post).setIcon(ContextCompat.getDrawable(context, R.drawable.add_post_outline));
+
                             fragmentManager.beginTransaction()
                                     .hide(active)
                                     .show(postListFragment)
@@ -116,7 +126,14 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                             toolbar.setTitle("Home");
                             mainMenu.findItem(R.id.action_search).setVisible(false);
                             return true;
+
                         case R.id.menu_search:
+
+                            menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.search_filled));
+                            navigation.getMenu().findItem(R.id.menu_home).setIcon(ContextCompat.getDrawable(context, R.drawable.home_outline));
+                            navigation.getMenu().findItem(R.id.menu_add_post).setIcon(ContextCompat.getDrawable(context, R.drawable.add_post_outline));
+
+
                             if (searchFragment == null) {
                                 searchFragment = new SearchFragment();
                                 fragmentManager.beginTransaction()
@@ -134,21 +151,31 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                             toolbar.setTitle("Search");
                             mainMenu.findItem(R.id.action_search).setVisible(true);
                             return true;
-//                        case R.id.menu_add_post:
-//                            if (searchFragment == null) {
-//                                searchFragment = new SearchFragment();
-//                                fragmentManager.beginTransaction()
-//                                        .add(R.id.fragment, searchFragment, SearchFragment.TAG)
-//                                        .hide(active)
-//                                        .commit();
-//                            }
-//                            else {
-//                                fragmentManager.beginTransaction()
-//                                        .hide(active)
-//                                        .show(searchFragment)
-//                                        .commit();
-//                            }
 
+                        case R.id.menu_add_post:
+
+                            menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.add_post_filled));
+                            navigation.getMenu().findItem(R.id.menu_search).setIcon(ContextCompat.getDrawable(context, R.drawable.search_outline));
+                            navigation.getMenu().findItem(R.id.menu_home).setIcon(ContextCompat.getDrawable(context, R.drawable.home_outline));
+
+
+                            if (postLoadFragment == null) {
+                                postLoadFragment = new PostLoadFragment((OpenFragmentCallback) context);
+                                fragmentManager.beginTransaction()
+                                        .add(R.id.fragment, postLoadFragment, PostLoadFragment.TAG)
+                                        .hide(active)
+                                        .commit();
+                            }
+                            else {
+                                fragmentManager.beginTransaction()
+                                        .hide(active)
+                                        .show(postLoadFragment)
+                                        .commit();
+                            }
+                            active = postLoadFragment;
+                            toolbar.setTitle("New Post");
+                            mainMenu.findItem(R.id.action_search).setVisible(false);
+                            return true;
                     }
                     return false;
                 }

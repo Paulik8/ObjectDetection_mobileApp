@@ -44,10 +44,10 @@ public class SearchFragment extends Fragment {
         searchList.setLayoutManager(new LinearLayoutManager(getContext()));
         searchAdapter = new SearchAdapter();
         searchList.setAdapter(searchAdapter);
-        MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        MainViewModel mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         SearchViewModel viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         observeSearchViewModel(viewModel);
-        observeMainViewModel(mainViewModel);
+        observeMainViewModel(mainViewModel, viewModel);
 
         initPosts(viewModel,1);
     }
@@ -61,13 +61,13 @@ public class SearchFragment extends Fragment {
 
     }
 
-    private void observeMainViewModel(MainViewModel mainViewModel) {
+    private void observeMainViewModel(MainViewModel mainViewModel, SearchViewModel searchViewModel) {
         mainViewModel.getSearch().observe(this, search -> {
-            //отправить запрос на поиск
+            searchViewModel.getPostList(search, 1);
         });
     }
 
     private void initPosts(SearchViewModel searchViewModel, Integer page) {
-        searchViewModel.getPostList(page);
+        searchViewModel.getPostList("cats", page);
     }
 }

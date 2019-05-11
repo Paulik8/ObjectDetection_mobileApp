@@ -50,9 +50,9 @@ public class SearchRepository {
         return data;
     }
 
-    public void searchPosts(Integer page) {
+    public void searchPosts(String query, Integer page) {
 
-        service.searchPosts("cats", page).enqueue(new Callback<List<Post>>() {
+        service.searchPosts(query, page).enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                 data.setValue(response.body());
