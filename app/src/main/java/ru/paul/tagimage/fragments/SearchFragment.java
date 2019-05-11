@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import ru.paul.tagimage.R;
 import ru.paul.tagimage.adapter.PostAdapter;
 import ru.paul.tagimage.adapter.SearchAdapter;
+import ru.paul.tagimage.viewmodel.MainViewModel;
 import ru.paul.tagimage.viewmodel.PostListViewModel;
 import ru.paul.tagimage.viewmodel.SearchViewModel;
 
@@ -43,19 +44,27 @@ public class SearchFragment extends Fragment {
         searchList.setLayoutManager(new LinearLayoutManager(getContext()));
         searchAdapter = new SearchAdapter();
         searchList.setAdapter(searchAdapter);
+        MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         SearchViewModel viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
-        observeViewModel(viewModel);
+        observeSearchViewModel(viewModel);
+        observeMainViewModel(mainViewModel);
 
         initPosts(viewModel,1);
     }
 
-    private void observeViewModel(SearchViewModel searchViewModel) {
+    private void observeSearchViewModel(SearchViewModel searchViewModel) {
         searchViewModel.getPosts().observe(this, posts -> {
             Log.i("posts", "observe");
             searchAdapter.setPosts(posts);
             searchAdapter.notifyDataSetChanged();
         });
 
+    }
+
+    private void observeMainViewModel(MainViewModel mainViewModel) {
+        mainViewModel.getSearch().observe(this, search -> {
+            //отправить запрос на поиск
+        });
     }
 
     private void initPosts(SearchViewModel searchViewModel, Integer page) {

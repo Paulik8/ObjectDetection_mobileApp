@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import butterknife.ButterKnife;
 import ru.paul.tagimage.fragments.PostListFragment;
 import ru.paul.tagimage.fragments.PostLoadFragment;
 import ru.paul.tagimage.fragments.SearchFragment;
+import ru.paul.tagimage.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements OpenFragmentCallback, OpenSearchFragment{
 
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     Menu mainMenu;
+    MainViewModel mainViewModel;
 
     FragmentManager fragmentManager;
     PostLoadFragment postLoadFragment = new PostLoadFragment(this);
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
 
 
         initNavigation();
+
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         openPostListFragment();
 
     }
@@ -60,8 +67,23 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         searchView.setQueryHint("Search");
         mainMenu = menu;
         searchItem.setVisible(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                mainViewModel.changeSearch(query);
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return true;
     }
+
+
 
     private void initNavigation() {
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
