@@ -7,13 +7,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +29,9 @@ import butterknife.ButterKnife;
 import ru.paul.tagimage.fragments.PostListFragment;
 import ru.paul.tagimage.fragments.PostLoadFragment;
 import ru.paul.tagimage.fragments.SearchFragment;
+import ru.paul.tagimage.repository.UserRepository;
 import ru.paul.tagimage.viewmodel.MainViewModel;
+import ru.paul.tagimage.viewmodel.UserViewModel;
 
 public class MainActivity extends AppCompatActivity implements OpenFragmentCallback, OpenSearchFragment{
 
@@ -44,10 +49,11 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
     SearchFragment searchFragment;
     Fragment active;
 
+
     @Override
     public void onBackPressed() {
         if (active == searchFragment) {
-//            searchView.setIconified(true);
+            searchView.setIconified(true);
             searchView.clearFocus();
             searchView.onActionViewCollapsed();
         }
@@ -199,6 +205,21 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                             active = postLoadFragment;
                             toolbar.setTitle("New Post");
                             mainMenu.findItem(R.id.action_search).setVisible(false);
+                            return true;
+
+                        case R.id.menu_logout:
+                            UserRepository.getInstance().getExecutorService().execute(() -> {
+                                UserRepository.getInstance().getUserDAO().clearActive(UserRepository.getInstance().getData().getValue());
+                                    }
+                            );
+
+//                            UserViewModel userViewModel = ViewModelProviders.of((LoginActivity)ActivitiesBus.getInstance().getContext()).get(UserViewModel.class);
+                            ActivitiesBus.getInstance().getUserViewModel().getUser().removeObservers((LifecycleOwner) ActivitiesBus.getInstance().getContext());
+                            UserRepository.getInstance().getData();
+                            Intent intent = new Intent(context, LoginActivity.class);
+                            startActivity(intent);
+//                            ((MainActivity)(context)).finish();
+//                            onDestroy();
                             return true;
                     }
                     return false;

@@ -29,7 +29,7 @@ public class UserRepository {
     private Service service;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final UserDAO userDAO = MainApplication.getInstance().getDb().userDAO();
-    private MutableLiveData<String> data = new MutableLiveData<>();
+    private MutableLiveData<ActiveEntity> data = new MutableLiveData<>();
     private MutableLiveData<Integer> idUser;
 
     public synchronized static UserRepository getInstance() {
@@ -49,15 +49,23 @@ public class UserRepository {
         service = retrofit.create(Service.class);
     }
 
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
     public UserDAO getUserDAO() {
         return userDAO;
     }
-    public LiveData<String> getData() {
+    public LiveData<ActiveEntity> getData() {
         return data;
     }
 
-    public void authorize() {
-        data.setValue("ok");
+    public void clearData() {
+        data = null;
+    }
+
+    public void authorize(ActiveEntity activeEntity) {
+        data.setValue(activeEntity);
     }
 
     public void getUser(String nick, String password, Integer age) {
@@ -71,23 +79,25 @@ public class UserRepository {
             @Override
             public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
 
+                ActiveEntity activeUser = new ActiveEntity();
+                activeUser.id = 1;
+                activeUser.nickname = nick;
+                activeUser.password = password;
+
                 executorService.execute(() -> {
-                    //userDAO.clearUsers();
+                    userDAO.clearUsers();//
                     UserEntity user = new UserEntity();
-                    ActiveEntity activeUser = new ActiveEntity();
                     user.username = nick;
                     user.password = password;
                     user.age = age;
-                    activeUser.nickname = nick;
-                    activeUser.password = password;
+
                     userDAO.insertUser(user);
                     userDAO.insertActiveUser(activeUser);
 //                    Log.i("idUser", userDAO.getUser(nick, password).toString());
                 });
 
-                data.setValue("ok");
+                data.setValue(activeUser);
 
-                Log.i("key2", data.getValue());
             }
 
             @Override

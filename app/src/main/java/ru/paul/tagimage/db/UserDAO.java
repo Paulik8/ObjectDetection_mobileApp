@@ -2,6 +2,7 @@ package ru.paul.tagimage.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -23,8 +24,11 @@ public interface UserDAO {
     @Query("DELETE FROM USERENTITY")
     void clearUsers();
 
-    @Query("SELECT nickname, password FROM ACTIVEENTITY")
-    List<String> getActiveUser();
+    @Query("SELECT * FROM ACTIVEENTITY")
+    ActiveEntity getActiveUser();
+
+    @Delete
+    void clearActive(ActiveEntity activeEntity);
 
     @Insert
     void insertActiveUser(ActiveEntity activeEntity);

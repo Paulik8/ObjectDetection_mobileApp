@@ -21,7 +21,7 @@ import ru.paul.tagimage.model.Post;
 
 public interface Service {
 
-    String BASE_URL = "http://192.168.1.36:3000/";
+    String BASE_URL = "http://192.168.1.65:3000/";
 //    String BASE_URL = "http://172.16.91.166:3000/";
 
     @Multipart

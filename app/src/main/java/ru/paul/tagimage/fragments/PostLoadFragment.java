@@ -52,6 +52,7 @@ import ru.paul.tagimage.OpenFragmentCallback;
 import ru.paul.tagimage.R;
 import ru.paul.tagimage.model.ApiResponse;
 import ru.paul.tagimage.repository.PostRepository;
+import ru.paul.tagimage.repository.UserRepository;
 import ru.paul.tagimage.service.Service;
 
 
@@ -91,9 +92,9 @@ public class PostLoadFragment extends Fragment {
         });
         sendButton.setOnClickListener(v -> {
             Service service = PostRepository.getInstance().getService();
-            byte[] encoded = ("paulik" + ":" + "kek").getBytes(StandardCharsets.UTF_8);
+            byte[] encoded = (UserRepository.getInstance().getData().getValue().nickname + ":" + UserRepository.getInstance().getData().getValue().password).getBytes(StandardCharsets.UTF_8);
             String base64 = "Basic " + Base64.encodeToString(encoded, Base64.NO_WRAP);
-            Map<String, RequestBody> map = new HashMap<>();
+
             RequestBody requestFile =
                     RequestBody.create(
                             MediaType.parse("image/*"),
@@ -102,7 +103,7 @@ public class PostLoadFragment extends Fragment {
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("photo", savingFile.getName(), requestFile);
 //            RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), savingFile);
-            RequestBody author = RequestBody.create(MediaType.parse("text/plain"), "paulik");
+            RequestBody author = RequestBody.create(MediaType.parse("text/plain"), UserRepository.getInstance().getData().getValue().nickname);
             RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), "Nature");
             RequestBody date = RequestBody.create(MediaType.parse("text/plain"), getDate());
 //            map.put("file\"; filename=\"pp.png\"", filePart);
@@ -175,7 +176,7 @@ public class PostLoadFragment extends Fragment {
 
 //Convert bitmap to byte array
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos);
         byte[] bitmapdata = bos.toByteArray();
 
 //write the bytes in file

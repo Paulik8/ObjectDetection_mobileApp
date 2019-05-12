@@ -22,4 +22,10 @@
         android:icon="@drawable/add_post_outline"
         app:showAsAction="never"
         tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/menu_logout"
+        android:orderInCategory="100"
+        android:icon="@drawable/logout_outline"
+        app:showAsAction="never"
+        tools:ignore="MenuTitle" />
 </menu>
