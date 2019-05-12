@@ -4,15 +4,13 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class UserEntity {
+public class ActiveEntity {
+
     @PrimaryKey
     public Integer id;
 
-    public String username;
+    public String nickname;
 
     public String password;
-
-    public Integer age;
-
-    public Boolean status;
 }
+

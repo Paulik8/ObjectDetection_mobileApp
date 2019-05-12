@@ -23,5 +23,11 @@ public interface UserDAO {
     @Query("DELETE FROM USERENTITY")
     void clearUsers();
 
+    @Query("SELECT nickname, password FROM ACTIVEENTITY")
+    List<String> getActiveUser();
+
+    @Insert
+    void insertActiveUser(ActiveEntity activeEntity);
+
 
 }

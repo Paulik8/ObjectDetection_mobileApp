@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,12 +37,24 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
     Menu mainMenu;
     MainViewModel mainViewModel;
     Context context;
-
+    SearchView searchView;
     FragmentManager fragmentManager;
     PostLoadFragment postLoadFragment;
     PostListFragment postListFragment = new PostListFragment();
     SearchFragment searchFragment;
     Fragment active;
+
+    @Override
+    public void onBackPressed() {
+        if (active == searchFragment) {
+//            searchView.setIconified(true);
+            searchView.clearFocus();
+            searchView.onActionViewCollapsed();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +79,11 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Search");
         mainMenu = menu;
+        searchView.setOnClickListener((v) -> {
+        });
 
         searchItem.setVisible(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -114,17 +129,26 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
                     switch (menuItem.getItemId()) {
                         case R.id.menu_home:
 
+//                            if (active == searchFragment) {
+//                                onBackPressed();
+//                            }
+
                             menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.home_filled));
                             navigation.getMenu().findItem(R.id.menu_search).setIcon(ContextCompat.getDrawable(context, R.drawable.search_outline));
                             navigation.getMenu().findItem(R.id.menu_add_post).setIcon(ContextCompat.getDrawable(context, R.drawable.add_post_outline));
+
 
                             fragmentManager.beginTransaction()
                                     .hide(active)
                                     .show(postListFragment)
                                     .commit();
-                            active = postListFragment;
-                            toolbar.setTitle("Home");
+
                             mainMenu.findItem(R.id.action_search).setVisible(false);
+                            searchView.setVisibility(View.GONE);
+                            toolbar.setTitle("Home");
+
+                            active = postListFragment;
+
                             return true;
 
                         case R.id.menu_search:

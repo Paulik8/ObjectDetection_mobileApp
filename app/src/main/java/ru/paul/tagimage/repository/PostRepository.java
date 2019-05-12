@@ -46,6 +46,10 @@ public class PostRepository {
         service = retrofit.create(Service.class);
     }
 
+    public Service getService() {
+        return service;
+    }
+
     public LiveData<List<Post>> getData() {
         return data;
     }

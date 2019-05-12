@@ -17,6 +17,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.paul.tagimage.MainApplication;
+import ru.paul.tagimage.db.ActiveEntity;
 import ru.paul.tagimage.db.UserDAO;
 import ru.paul.tagimage.db.UserEntity;
 import ru.paul.tagimage.model.ApiResponse;
@@ -48,8 +49,15 @@ public class UserRepository {
         service = retrofit.create(Service.class);
     }
 
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
     public LiveData<String> getData() {
         return data;
+    }
+
+    public void authorize() {
+        data.setValue("ok");
     }
 
     public void getUser(String nick, String password, Integer age) {
@@ -64,12 +72,16 @@ public class UserRepository {
             public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
 
                 executorService.execute(() -> {
-                    userDAO.clearUsers();
+                    //userDAO.clearUsers();
                     UserEntity user = new UserEntity();
+                    ActiveEntity activeUser = new ActiveEntity();
                     user.username = nick;
                     user.password = password;
                     user.age = age;
+                    activeUser.nickname = nick;
+                    activeUser.password = password;
                     userDAO.insertUser(user);
+                    userDAO.insertActiveUser(activeUser);
 //                    Log.i("idUser", userDAO.getUser(nick, password).toString());
                 });
 

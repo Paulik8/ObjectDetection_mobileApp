@@ -5,24 +5,19 @@
     
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/load_image"
-        android:layout_width="@dimen/image_size"
-        android:layout_height="@dimen/image_size" />
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     
     <Button
         android:id="@+id/load_button"
         android:text="Open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
     <Button
-        android:id="@+id/fragment2"
-        android:text="ListPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/fragment3"
-        android:text="Search"
+        android:id="@+id/send_button"
+        android:text="Send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

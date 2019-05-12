@@ -10,8 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.paul.tagimage.repository.UserRepository;
 import ru.paul.tagimage.viewmodel.UserViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -39,11 +42,15 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();
         });
 
-        loginButton.setOnClickListener(view -> {
+        List<String> activeUser = UserRepository.getInstance().getUserDAO().getActiveUser();
 
-            userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString())));
-        });
+        if (activeUser != null) {
+            userViewModel.authorize();
+        }
+        else {
+            loginButton.setOnClickListener(view ->
+                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString()))));
+        }
     }
-
 
 }

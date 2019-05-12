@@ -50,7 +50,7 @@ public class PostListFragment extends Fragment {
         postListViewModel.getPosts().observe(this, posts -> {
             Log.i("posts", "observe");
             postAdapter.setPosts(posts);
-            postAdapter.notifyDataSetChanged();
+                postAdapter.notifyDataSetChanged();
         });
 
     }
