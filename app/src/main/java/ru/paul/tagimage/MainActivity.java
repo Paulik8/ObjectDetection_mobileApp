@@ -26,6 +26,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.paul.tagimage.db.ActiveEntity;
 import ru.paul.tagimage.fragments.PostListFragment;
 import ru.paul.tagimage.fragments.PostLoadFragment;
 import ru.paul.tagimage.fragments.SearchFragment;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
         initNavigation();
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
 
         openPostListFragment();
 
@@ -209,16 +211,15 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
 
                         case R.id.menu_logout:
                             UserRepository.getInstance().getExecutorService().execute(() -> {
-                                UserRepository.getInstance().getUserDAO().clearActive(UserRepository.getInstance().getData().getValue());
+                                UserRepository.getInstance().getUserDAO().clearActive();
                                     }
                             );
 
 //                            UserViewModel userViewModel = ViewModelProviders.of((LoginActivity)ActivitiesBus.getInstance().getContext()).get(UserViewModel.class);
-                            ActivitiesBus.getInstance().getUserViewModel().getUser().removeObservers((LifecycleOwner) ActivitiesBus.getInstance().getContext());
-                            UserRepository.getInstance().getData();
+                            UserRepository.getInstance().deleteInstance();
                             Intent intent = new Intent(context, LoginActivity.class);
                             startActivity(intent);
-//                            ((MainActivity)(context)).finish();
+                            ((MainActivity)(context)).finish();
 //                            onDestroy();
                             return true;
                     }

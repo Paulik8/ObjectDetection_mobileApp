@@ -39,6 +39,10 @@ public class UserRepository {
         return userRepository;
     }
 
+    public synchronized void deleteInstance() {
+        userRepository = null;
+    }
+
     private UserRepository() {
 
         Retrofit retrofit = new Retrofit.Builder()

@@ -9,6 +9,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 @Dao
 public interface UserDAO {
 
@@ -25,10 +27,10 @@ public interface UserDAO {
     void clearUsers();
 
     @Query("SELECT * FROM ACTIVEENTITY")
-    ActiveEntity getActiveUser();
+    Single<ActiveEntity> getActiveUser();
 
-    @Delete
-    void clearActive(ActiveEntity activeEntity);
+    @Query("DELETE FROM ACTIVEENTITY")
+    void clearActive();
 
     @Insert
     void insertActiveUser(ActiveEntity activeEntity);

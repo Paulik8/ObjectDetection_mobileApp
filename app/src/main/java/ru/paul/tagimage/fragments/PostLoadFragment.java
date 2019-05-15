@@ -85,9 +85,15 @@ public class PostLoadFragment extends Fragment {
 
         button.setOnClickListener(view -> {
 
-            Intent loadImage = new Intent(Intent.ACTION_PICK);
-            loadImage.setType("image/*");
-            startActivityForResult(loadImage, GALLERY_REQUEST);
+//            Intent loadImage = new Intent(Intent.ACTION_PICK);
+//            loadImage.setType("image/*");
+//            startActivityForResult(loadImage, GALLERY_REQUEST);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+
+            startActivityForResult(Intent.createChooser(intent,
+                    "Select Picture"), GALLERY_REQUEST);
 
         });
         sendButton.setOnClickListener(v -> {
@@ -142,7 +148,7 @@ public class PostLoadFragment extends Fragment {
 
         Bitmap bitmap = null;
 
-        if (requestCode == GALLERY_REQUEST) {
+        if (data != null) {
             Uri selectedImage = data.getData();
             Bitmap bitmapImage = getImage(selectedImage);
             file2 = new File(selectedImage.getPath());
