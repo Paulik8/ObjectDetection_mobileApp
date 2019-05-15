@@ -3,4 +3,6 @@
     <string name="menu_home">Posts</string>
     <string name="menu_search">Search</string>
     <string name="menu_add_post">New Post</string>
+    <string name="edit_nickname">Nickname</string>
+    <string name="edit_password">Password</string>
 </resources>

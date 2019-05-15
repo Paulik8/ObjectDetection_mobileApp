@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_marginStart="@dimen/item_margin_horizontal"
+        android:layout_marginEnd="@dimen/item_margin_horizontal"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
         android:layout_height="wrap_content">
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/nick"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
+            android:hint="@string/edit_nickname"
+            app:met_floatingLabel="highlight"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-        <EditText
+            android:layout_width="match_parent" />
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/password"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_below="@+id/nick"
+            android:layout_marginTop="@dimen/top"
+            android:hint="@string/edit_password"
+            app:met_floatingLabel="highlight"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/age"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_below="@+id/password"
+            android:layout_marginTop="@dimen/top"
+            app:met_floatingLabel="highlight"
+            android:hint="Age"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/login"
-            android:layout_weight="1"
+            android:layout_below="@+id/age"
+            android:layout_marginTop="@dimen/top"
+            android:layout_centerHorizontal="true"
             android:text="Login!"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

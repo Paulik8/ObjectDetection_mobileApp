@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.room.EmptyResultSetException;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,11 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login)
     Button loginButton;
     @BindView(R.id.nick)
-    EditText nickname;
+    MaterialEditText nickname;
     @BindView(R.id.password)
-    EditText password;
+    MaterialEditText password;
     @BindView(R.id.age)
-    EditText age;
+    MaterialEditText age;
     ActiveEntity activeUser;
     public Observer observer;
 
