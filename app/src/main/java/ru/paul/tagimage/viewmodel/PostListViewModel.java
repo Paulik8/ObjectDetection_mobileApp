@@ -26,4 +26,8 @@ public class PostListViewModel extends ViewModel {
     public void getPostList(Integer page) {
         PostRepository.getInstance().getListPost(page);
     }
+
+    public void getPostListScroll(Integer page) {
+        PostRepository.getInstance().getListPostScroll(page);
+    }
 }

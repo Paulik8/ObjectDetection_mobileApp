@@ -67,4 +67,26 @@ public class SearchRepository {
 
     }
 
+    public void getListPostScroll(String query, Integer page) {
+
+        service.searchPosts(query, page).enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
+                List<Post> res = response.body();
+                List<Post> realPosts = getData().getValue();
+                if (res != null)
+                    realPosts.addAll(res);
+                data.setValue(realPosts);
+
+                Log.i("posts", "ok");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
+                Log.e("posts", "err");
+            }
+        });
+
+    }
+
 }

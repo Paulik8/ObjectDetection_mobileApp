@@ -13,11 +13,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.paul.tagimage.OnLoadMoreListener;
 import ru.paul.tagimage.R;
 import ru.paul.tagimage.adapter.PostAdapter;
 import ru.paul.tagimage.adapter.SearchAdapter;
+import ru.paul.tagimage.model.Post;
 import ru.paul.tagimage.viewmodel.MainViewModel;
 import ru.paul.tagimage.viewmodel.PostListViewModel;
 import ru.paul.tagimage.viewmodel.SearchViewModel;
@@ -29,6 +33,9 @@ public class SearchFragment extends Fragment {
 
     @BindView(R.id.search_list)
     RecyclerView searchList;
+    Integer page = 1;
+    List<Post> postsArr;
+    String searchRes;
 
     @Nullable
     @Override
@@ -42,19 +49,26 @@ public class SearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         searchList.setLayoutManager(new LinearLayoutManager(getContext()));
-        searchAdapter = new SearchAdapter();
+        searchAdapter = new SearchAdapter(searchList);
         searchList.setAdapter(searchAdapter);
         MainViewModel mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         SearchViewModel viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         observeSearchViewModel(viewModel);
         observeMainViewModel(mainViewModel, viewModel);
 
-        initPosts(viewModel,1);
+        initPosts(viewModel);
+        setListener(viewModel);
     }
 
     private void observeSearchViewModel(SearchViewModel searchViewModel) {
         searchViewModel.getPosts().observe(this, posts -> {
             Log.i("posts", "observe");
+            if (postsArr != null) {
+                postsArr.remove(postsArr.size() - 1);
+                searchAdapter.notifyItemRemoved(postsArr.size());
+            }
+            postsArr = posts;
+            searchAdapter.setLoaded();
             searchAdapter.setPosts(posts);
             searchAdapter.notifyDataSetChanged();
         });
@@ -63,11 +77,23 @@ public class SearchFragment extends Fragment {
 
     private void observeMainViewModel(MainViewModel mainViewModel, SearchViewModel searchViewModel) {
         mainViewModel.getSearch().observe(this, search -> {
-            searchViewModel.getPostList(search, 1);
+            searchRes = search;
+            searchViewModel.getPostList(search, page);
         });
     }
 
-    private void initPosts(SearchViewModel searchViewModel, Integer page) {
+    private void initPosts(SearchViewModel searchViewModel) {
         searchViewModel.getPostList("cats", page);
+    }
+
+    private void setListener(SearchViewModel searchViewModel) {
+        searchAdapter.setOnLoadMoreListener((new OnLoadMoreListener() {
+            @Override
+            public void OnLoadMore() {
+                searchViewModel.getPostListScroll(searchRes, ++page);
+                postsArr.add(null);
+                searchAdapter.notifyItemInserted(postsArr.size() - 1);
+            }
+        }));
     }
 }
