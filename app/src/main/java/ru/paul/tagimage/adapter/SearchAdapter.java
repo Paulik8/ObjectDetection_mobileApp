@@ -29,7 +29,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<Post> posts;
     private RecyclerView recyclerView;
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 1;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;

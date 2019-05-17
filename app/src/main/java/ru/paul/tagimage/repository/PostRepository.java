@@ -92,4 +92,22 @@ public class PostRepository {
         });
 
     }
+
+    public void refreshPosts(Integer page) {
+
+        service.getPostList(page).enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
+                data.setValue(response.body());
+
+                Log.i("posts", "ok");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
+                Log.e("posts", "err");
+            }
+        });
+
+    }
 }

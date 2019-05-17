@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
+                searchFragment.setPage(1);
                 mainViewModel.changeSearch(query);
                 return true;
             }

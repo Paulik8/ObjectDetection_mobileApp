@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,10 +34,13 @@ public class SearchFragment extends Fragment {
 
     @BindView(R.id.search_list)
     RecyclerView searchList;
-    Integer page = 1;
-    List<Post> postsArr;
-    String searchRes;
+    private Integer page = 1;
+    private List<Post> postsArr = new ArrayList<>();
+    private String searchRes = "cats";
 
+    public void setPage(Integer page) {
+        this.page = page;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,11 +67,14 @@ public class SearchFragment extends Fragment {
     private void observeSearchViewModel(SearchViewModel searchViewModel) {
         searchViewModel.getPosts().observe(this, posts -> {
             Log.i("posts", "observe");
-            if (postsArr != null) {
+            if (postsArr.size() > 0) {
                 postsArr.remove(postsArr.size() - 1);
                 searchAdapter.notifyItemRemoved(postsArr.size());
             }
-            postsArr = posts;
+            if (postsArr.size() > 0) {
+                postsArr.clear();
+            }
+            postsArr.addAll(posts);
             searchAdapter.setLoaded();
             searchAdapter.setPosts(posts);
             searchAdapter.notifyDataSetChanged();
@@ -83,17 +90,14 @@ public class SearchFragment extends Fragment {
     }
 
     private void initPosts(SearchViewModel searchViewModel) {
-        searchViewModel.getPostList("cats", page);
+        searchViewModel.getPostList(searchRes, page);
     }
 
     private void setListener(SearchViewModel searchViewModel) {
-        searchAdapter.setOnLoadMoreListener((new OnLoadMoreListener() {
-            @Override
-            public void OnLoadMore() {
-                searchViewModel.getPostListScroll(searchRes, ++page);
-                postsArr.add(null);
-                searchAdapter.notifyItemInserted(postsArr.size() - 1);
-            }
+        searchAdapter.setOnLoadMoreListener((() -> {
+            searchViewModel.getPostListScroll(searchRes, ++page);
+            postsArr.add(null);
+            searchAdapter.notifyItemInserted(postsArr.size() - 1);
         }));
     }
 }

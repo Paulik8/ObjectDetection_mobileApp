@@ -30,4 +30,7 @@ public class PostListViewModel extends ViewModel {
     public void getPostListScroll(Integer page) {
         PostRepository.getInstance().getListPostScroll(page);
     }
+    public void refreshPosts(Integer page) {
+        PostRepository.getInstance().refreshPosts(page);
+    }
 }
