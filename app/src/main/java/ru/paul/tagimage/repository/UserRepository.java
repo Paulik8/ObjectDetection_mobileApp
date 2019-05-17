@@ -72,14 +72,14 @@ public class UserRepository {
         data.setValue(activeEntity);
     }
 
-    public void getUser(String nick, String password, Integer age) {
+    public void getUser(String nick, String password) {
 
 
         byte[] encoded = (nick + ":" + password).getBytes(StandardCharsets.UTF_8);
         String base64 = "Basic " + Base64.encodeToString(encoded, Base64.NO_WRAP);
 //        ApiResponse requestAuth = new ApiResponse(age);
 
-        service.getAuth(base64, age).enqueue(new Callback<ApiResponse>() {
+        service.getAuth(base64, 13).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
 
@@ -93,7 +93,7 @@ public class UserRepository {
                     UserEntity user = new UserEntity();
                     user.username = nick;
                     user.password = password;
-                    user.age = age;
+                    user.age = 13;
 
                     userDAO.insertUser(user);
                     userDAO.insertActiveUser(activeUser);

@@ -25,17 +25,9 @@
             app:met_floatingLabel="highlight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/age"
-            android:layout_below="@+id/password"
-            android:layout_marginTop="@dimen/top"
-            app:met_floatingLabel="highlight"
-            android:hint="Age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/login"
-            android:layout_below="@+id/age"
+            android:layout_below="@+id/password"
             android:layout_marginTop="@dimen/top"
             android:layout_centerHorizontal="true"
             android:text="Login!"

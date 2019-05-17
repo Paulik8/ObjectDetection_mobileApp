@@ -27,7 +27,7 @@ public class UserViewModel extends ViewModel {
         UserRepository.getInstance().authorize(activeEntity);
     }
 
-    public void postAuth(String nick, String password, Integer age) {
-        UserRepository.getInstance().getUser(nick, password, age);
+    public void postAuth(String nick, String password) {
+        UserRepository.getInstance().getUser(nick, password);
     }
 }

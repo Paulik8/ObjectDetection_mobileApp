@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     MaterialEditText nickname;
     @BindView(R.id.password)
     MaterialEditText password;
-    @BindView(R.id.age)
-    MaterialEditText age;
+//    @BindView(R.id.age)
+//    MaterialEditText age;
     ActiveEntity activeUser;
     public Observer observer;
 
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     nickname.setError("Not filled");
             }
                 else {
-                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString())));
+                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString());
                 }
 
             Log.i("activeUser2", String.valueOf("null"));
