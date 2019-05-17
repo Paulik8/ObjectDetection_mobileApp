@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OpenFragmentCallb
             searchView.setIconified(true);
             searchView.clearFocus();
             searchView.onActionViewCollapsed();
+            super.onBackPressed();
         }
         else {
             super.onBackPressed();

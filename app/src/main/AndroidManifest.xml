@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
+            >
         </activity>
         <activity android:name=".MainActivity"
         android:label="Home"

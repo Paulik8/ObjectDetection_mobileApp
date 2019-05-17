@@ -78,10 +78,17 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();
         });
 
-        loginButton.setOnClickListener(view ->
-                userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString()))));
-        Log.i("activeUser2", String.valueOf("null"));
+        loginButton.setOnClickListener(view -> {
 
+                if (nickname.getText().toString().equals("")) {
+                    nickname.setError("Not filled");
+            }
+                else {
+                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), Integer.parseInt((age.getText().toString())));
+                }
+
+            Log.i("activeUser2", String.valueOf("null"));
+        });
 //        UserRepository.getInstance().getExecutorService().execute(() ->
 //                activeUser = UserRepository.getInstance().getUserDAO().getActiveUser());
 

@@ -1,6 +1,7 @@
 package ru.paul.tagimage.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,19 +9,25 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.apache.commons.io.FileUtils;
 
@@ -69,11 +76,13 @@ public class PostLoadFragment extends Fragment {
     Button button;
     @BindView(R.id.send_button)
     Button sendButton;
+    @BindView(R.id.caption_load)
+    MaterialEditText captionEdit;
     @BindView(R.id.load_image)
     AppCompatImageView imageView;
-    File savingFile;
-    File file2;
-    String outMimeType;
+    private File savingFile;
+    private File file2;
+    private String outMimeType;
 
     public PostLoadFragment(@Nullable OpenFragmentCallback openFragmentCallback) {
         this.openFragmentCallback = openFragmentCallback;
@@ -97,38 +106,42 @@ public class PostLoadFragment extends Fragment {
 
         });
         sendButton.setOnClickListener(v -> {
-            Service service = PostRepository.getInstance().getService();
-            byte[] encoded = (UserRepository.getInstance().getData().getValue().nickname + ":" + UserRepository.getInstance().getData().getValue().password).getBytes(StandardCharsets.UTF_8);
-            String base64 = "Basic " + Base64.encodeToString(encoded, Base64.NO_WRAP);
+            if (captionEdit.getText().toString().equals("")) {
+                captionEdit.setError("Caption is not filled");
+            } else {
+                Service service = PostRepository.getInstance().getService();
+                byte[] encoded = (UserRepository.getInstance().getData().getValue().nickname + ":" + UserRepository.getInstance().getData().getValue().password).getBytes(StandardCharsets.UTF_8);
+                String base64 = "Basic " + Base64.encodeToString(encoded, Base64.NO_WRAP);
 
-            RequestBody requestFile =
-                    RequestBody.create(
-                            MediaType.parse("image/*"),
-                            savingFile
-                    );
-            MultipartBody.Part body =
-                    MultipartBody.Part.createFormData("photo", savingFile.getName(), requestFile);
-//            RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), savingFile);
-            RequestBody author = RequestBody.create(MediaType.parse("text/plain"), UserRepository.getInstance().getData().getValue().nickname);
-            RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), "Nature");
-            RequestBody date = RequestBody.create(MediaType.parse("text/plain"), getDate());
-//            map.put("file\"; filename=\"pp.png\"", filePart);
-//            map.put("photo", filePart);
-//            map.put("author", author);
-//            map.put("caption", caption);
-//            map.put("data", date);
-            service.loadPost(base64, body, author, caption, date).enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    Log.i("load", String.valueOf(response.body()));
-                }
+                RequestBody requestFile =
+                        RequestBody.create(
+                                MediaType.parse("image/*"),
+                                savingFile
+                        );
+                MultipartBody.Part body =
+                        MultipartBody.Part.createFormData("photo", savingFile.getName(), requestFile);
+    //            RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), savingFile);
+                RequestBody author = RequestBody.create(MediaType.parse("text/plain"), UserRepository.getInstance().getData().getValue().nickname);
+                RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), captionEdit.getText().toString());
+                RequestBody date = RequestBody.create(MediaType.parse("text/plain"), getDate());
+    //            map.put("file\"; filename=\"pp.png\"", filePart);
+    //            map.put("photo", filePart);
+    //            map.put("author", author);
+    //            map.put("caption", caption);
+    //            map.put("data", date);
+                service.loadPost(base64, body, author, caption, date).enqueue(new Callback<ApiResponse>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        showPopUp();
+                        Log.i("load", String.valueOf(response.body()));
+                    }
 
-                @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                    Log.i("load", "err");
-                }
-            });
-        });
+                    @Override
+                    public void onFailure(Call<ApiResponse> call, Throwable t) {
+                        Log.i("load", "err");
+                    }
+                });
+        }});
         logMemory();
 
     }
@@ -168,6 +181,30 @@ public class PostLoadFragment extends Fragment {
             logMemory();
         }
 
+    }
+
+    private void showPopUp() {
+//        LayoutInflater inflater = (LayoutInflater)
+//                getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View popupView = layoutInflater.inflate(R.layout.popup_load, null);
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        View v = layoutInflater.inflate(R.layout.activity_main, null);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+        closePopUp(popupWindow);
+
+        // dismiss the popup window when touched
+    }
+
+    private void closePopUp(PopupWindow pop) {
+        Handler handler = new Handler();
+        handler.postDelayed(pop::dismiss, 3000);
     }
 
     private String getDate() {
@@ -243,11 +280,11 @@ public class PostLoadFragment extends Fragment {
         int px = getResources().getDimensionPixelSize(R.dimen.image_size);
 
         InputStream ims = getContext().getContentResolver().openInputStream(image);
-        Bitmap bitmap = decodeSampledBitmapFromResource(image);
+        Bitmap bitmap = decodeSampledBitmapFromResource(image, px, px);
         imageView.setImageBitmap(bitmap);
     }
 
-    private Bitmap decodeSampledBitmapFromResource(Uri uri) {
+    private Bitmap decodeSampledBitmapFromResource(Uri uri, Integer reqHeight, Integer reqWidth) {
 
         // Читаем с inJustDecodeBounds=true для определения размеров
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -266,8 +303,8 @@ public class PostLoadFragment extends Fragment {
             e.printStackTrace();
         }
         // Вычисляем inSampleSize
-//        options.inSampleSize = calculateInSampleSize(options, reqWidth,
-//                reqHeight);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth,
+                reqHeight);
 
         try {
             ims = getContext().getContentResolver().openInputStream(uri);

@@ -74,8 +74,11 @@ public class SearchFragment extends Fragment {
             if (postsArr.size() > 0) {
                 postsArr.clear();
             }
-            postsArr.addAll(posts);
             searchAdapter.setLoaded();
+            if (posts != null) {
+                postsArr.addAll(posts);
+            }
+
             searchAdapter.setPosts(posts);
             searchAdapter.notifyDataSetChanged();
         });

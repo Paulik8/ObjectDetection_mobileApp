@@ -9,6 +9,6 @@
     <dimen name="item_margin_top_nickname">7dp</dimen>
     <dimen name="item_margin_start_nickname_caption">8dp</dimen>
     <dimen name="top">8dp</dimen>
-    <dimen name="image_size">100dp</dimen>
+    <dimen name="image_size">200dp</dimen>
 
 </resources>
