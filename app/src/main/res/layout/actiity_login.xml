@@ -25,14 +25,29 @@
             app:met_floatingLabel="highlight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/login"
+        <LinearLayout
             android:layout_below="@+id/password"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/login_in"
             android:layout_marginTop="@dimen/top"
-            android:layout_centerHorizontal="true"
             android:text="Login!"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_marginStart="@dimen/item_margin_horizontal"
+            android:layout_marginTop="@dimen/top"
+            android:text="Signup!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

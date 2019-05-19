@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -188,6 +189,8 @@ public class PostLoadFragment extends Fragment {
 //                getSystemService(LAYOUT_INFLATER_SERVICE);
         LayoutInflater layoutInflater = getLayoutInflater();
         View popupView = layoutInflater.inflate(R.layout.popup_load, null);
+        TextView textView = popupView.findViewById(R.id.text_load);
+        textView.setText(R.string.loaded);
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
@@ -204,7 +207,7 @@ public class PostLoadFragment extends Fragment {
 
     private void closePopUp(PopupWindow pop) {
         Handler handler = new Handler();
-        handler.postDelayed(pop::dismiss, 3000);
+        handler.postDelayed(pop::dismiss, 2000);
     }
 
     private String getDate() {

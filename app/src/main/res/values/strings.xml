@@ -6,4 +6,8 @@
     <string name="edit_nickname">Nickname</string>
     <string name="edit_password">Password</string>
     <string name="edit_caption">Caption</string>
+
+    <string name="duplicate_error">Username already exists</string>
+    <string name="unauthorized_error">User not found</string>
+    <string name="loaded">Loaded</string>
 </resources>

@@ -37,4 +37,7 @@ public interface Service {
     @FormUrlEncoded
     @POST("auth")
     Call<ApiResponse> getAuth(@Header("Authorization") String auth, @Field("age") Integer age);
+
+    @POST("login")
+    Call<ApiResponse> getLogin(@Header("Authorization") String auth);
 }

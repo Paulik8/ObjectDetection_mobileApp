@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import ru.paul.tagimage.ErrorResponse;
 import ru.paul.tagimage.db.ActiveEntity;
 import ru.paul.tagimage.repository.UserRepository;
 
@@ -27,7 +28,11 @@ public class UserViewModel extends ViewModel {
         UserRepository.getInstance().authorize(activeEntity);
     }
 
-    public void postAuth(String nick, String password) {
-        UserRepository.getInstance().getUser(nick, password);
+    public void postAuth(String nick, String password, ErrorResponse errorResponse) {
+        UserRepository.getInstance().getUser(nick, password, errorResponse);
+    }
+
+    public void postLogin(String nick, String password, ErrorResponse errorResponse) {
+        UserRepository.getInstance().login(nick, password, errorResponse);
     }
 }

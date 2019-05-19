@@ -6,12 +6,12 @@
     android:background="#4F6370">
 
     <TextView
+        android:id="@+id/text_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="30dp"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:text="Loaded!"/>
+        android:textSize="18sp"/>
 
 </RelativeLayout>

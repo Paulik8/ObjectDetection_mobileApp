@@ -3,9 +3,17 @@ package ru.paul.tagimage;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +37,12 @@ import ru.paul.tagimage.db.ActiveEntity;
 import ru.paul.tagimage.repository.UserRepository;
 import ru.paul.tagimage.viewmodel.UserViewModel;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ErrorResponse{
 
     @BindView(R.id.login)
     Button loginButton;
+    @BindView(R.id.login_in)
+    Button loginInButton;
     @BindView(R.id.nick)
     MaterialEditText nickname;
     @BindView(R.id.password)
@@ -80,12 +90,24 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(view -> {
 
-                if (nickname.getText().toString().equals("")) {
+                if (nickname.getText().toString().equals("") || password.getText().toString().equals("")) {
                     nickname.setError("Not filled");
             }
                 else {
-                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString());
+                    userViewModel.postAuth(nickname.getText().toString(), password.getText().toString(), this);
                 }
+
+            Log.i("activeUser2", String.valueOf("null"));
+        });
+
+        loginInButton.setOnClickListener(view -> {
+
+            if (nickname.getText().toString().equals("")|| password.getText().toString().equals("")) {
+                nickname.setError("Not filled");
+            }
+            else {
+                userViewModel.postLogin(nickname.getText().toString(), password.getText().toString(), this);
+            }
 
             Log.i("activeUser2", String.valueOf("null"));
         });
@@ -105,4 +127,45 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void error(Integer code) {
+        showPopUp(code);
+    }
+
+    private void showPopUp(Integer code) {
+//        LayoutInflater inflater = (LayoutInflater)
+//                getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View popupView = layoutInflater.inflate(R.layout.popup_load, null);
+        TextView textView = popupView.findViewById(R.id.text_load);
+        if (code == 409)
+            textView.setText(R.string.duplicate_error);
+        else if (code == 401)
+            textView.setText(R.string.unauthorized_error);
+
+        hideKeyboardFrom();
+
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        View v = layoutInflater.inflate(R.layout.actiity_login, null);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+        closePopUp(popupWindow);
+
+        // dismiss the popup window when touched
+    }
+
+    private void closePopUp(PopupWindow pop) {
+        Handler handler = new Handler();
+        handler.postDelayed(pop::dismiss, 2000);
+    }
+
+    public void hideKeyboardFrom() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+    }
 }

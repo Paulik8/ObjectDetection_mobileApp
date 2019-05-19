@@ -1,7 +1,13 @@
 package ru.paul.tagimage.repository;
 
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -16,7 +22,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ru.paul.tagimage.ErrorResponse;
 import ru.paul.tagimage.MainApplication;
+import ru.paul.tagimage.R;
 import ru.paul.tagimage.db.ActiveEntity;
 import ru.paul.tagimage.db.UserDAO;
 import ru.paul.tagimage.db.UserEntity;
@@ -72,7 +80,7 @@ public class UserRepository {
         data.setValue(activeEntity);
     }
 
-    public void getUser(String nick, String password) {
+    public void getUser(String nick, String password, ErrorResponse errorResponse) {
 
 
         byte[] encoded = (nick + ":" + password).getBytes(StandardCharsets.UTF_8);
@@ -83,24 +91,28 @@ public class UserRepository {
             @Override
             public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
 
-                ActiveEntity activeUser = new ActiveEntity();
-                activeUser.id = 1;
-                activeUser.nickname = nick;
-                activeUser.password = password;
+                if (response.body().getResponse() != 409) {
+                    ActiveEntity activeUser = new ActiveEntity();
+                    activeUser.id = 1;
+                    activeUser.nickname = nick;
+                    activeUser.password = password;
 
-                executorService.execute(() -> {
-                    userDAO.clearUsers();//
-                    UserEntity user = new UserEntity();
-                    user.username = nick;
-                    user.password = password;
-                    user.age = 13;
+                    executorService.execute(() -> {
+                        userDAO.clearUsers();//
+                        UserEntity user = new UserEntity();
+                        user.username = nick;
+                        user.password = password;
+                        user.age = 13;
 
-                    userDAO.insertUser(user);
-                    userDAO.insertActiveUser(activeUser);
+                        userDAO.insertUser(user);
+                        userDAO.insertActiveUser(activeUser);
 //                    Log.i("idUser", userDAO.getUser(nick, password).toString());
-                });
+                    });
 
-                data.setValue(activeUser);
+                    data.setValue(activeUser);
+                } else {
+                    errorResponse.error(409);
+                }
 
             }
 
@@ -110,4 +122,50 @@ public class UserRepository {
             }
         });
     }
+
+    public void login(String nick, String password, ErrorResponse errorResponse) {
+
+
+        byte[] encoded = (nick + ":" + password).getBytes(StandardCharsets.UTF_8);
+        String base64 = "Basic " + Base64.encodeToString(encoded, Base64.NO_WRAP);
+//        ApiResponse requestAuth = new ApiResponse(age);
+
+        service.getLogin(base64).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(@NonNull  Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+
+                if (response.body().getResponse() != 401) {
+                    ActiveEntity activeUser = new ActiveEntity();
+                    activeUser.id = 1;
+                    activeUser.nickname = nick;
+                    activeUser.password = password;
+
+                    executorService.execute(() -> {
+                        userDAO.clearUsers();//
+                        UserEntity user = new UserEntity();
+                        user.username = nick;
+                        user.password = password;
+                        user.age = 13;
+
+                        userDAO.insertUser(user);
+                        userDAO.insertActiveUser(activeUser);
+//                    Log.i("idUser", userDAO.getUser(nick, password).toString());
+                    });
+
+                    data.setValue(activeUser);
+                } else {
+                    errorResponse.error(401);
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse> call,@NonNull Throwable t) {
+                Log.i("err", "err");
+            }
+        });
+    }
+
+
+
 }
